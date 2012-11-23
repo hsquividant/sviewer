@@ -178,7 +178,7 @@ var hardConfig = {
 
 
 var map;
-var wmcBaseLayers = [];
+var wmclayersBackground = [];
 
 function init(){
     "use strict";
@@ -258,13 +258,11 @@ function init(){
                 queryableLayers.push(l);
                 queryableLayersUrl.push(l.url)
                 }
-            if (l.isBaseLayer && l.name != "fake") {
-                wmcBaseLayers.push(l);
+            if (l.CLASS_NAME ==="OpenLayers.Layer.WMS"  && l.queryable===false) {
+                wmclayersBackground.push(l);
             }
             });
-            if (wmcBaseLayers.length > 0) {
-                map.setBaseLayer(wmcBaseLayers[0]);
-            }
+           
             if (queryableLayers.length > 0) {
                 var popup, getFeatureInfoWmc;
                 // fake popup function
@@ -339,30 +337,17 @@ function init(){
     panel.addControls(
         [new Ol.Control.Button({
             displayClass: "btLayerSwitch",
-            trigger: function() {
-                if (config.wmc) {
-                    var enabledLayer = 0;
-                    for (i=0;i<=wmcBaseLayers.length;i+=1) {
-                        if (wmcBaseLayers[i].getVisibility()) {
-                            enabledLayer = i;
-                            break;
-                        }
+            trigger: function() {                
+                var ll=(!config.wmc)?hardConfig.layersBackground : wmclayersBackground;
+                var n=ll.length;
+                var lv=0;
+                for (i=0;i<n;i+=1) {
+                    if (ll[i].getVisibility()) { 
+                        lv=i;
                     }
-                    map.setBaseLayer((enabledLayer < wmcBaseLayers.length -1)?wmcBaseLayers[enabledLayer + 1]:wmcBaseLayers[0]);   
-                   
+                    ll[i].setVisibility(false);
                 }
-                else {
-                    var ll=hardConfig.layersBackground;
-                    var n=ll.length;
-                    var lv=0;
-                    for (i=0;i<n;i+=1) {
-                        if (ll[i].getVisibility()) { 
-                            lv=i;
-                        }
-                        ll[i].setVisibility(false);
-                    }
-                    ll[(lv+1)%n].setVisibility(true);
-                }
+                ll[(lv+1)%n].setVisibility(true);               
             }
         })]
     );
@@ -564,8 +549,9 @@ function init(){
     /**
      * geocodage form
      */
-    var markGeoloc = new Ol.Layer.Markers("geocodage left");
+    var markGeoloc = new Ol.Layer.Markers("geocodage left");   
     map.addLayers([markGeoloc]);
+    markGeoloc.setZIndex(1000);
     var addressInput = Ol.Util.getElement("addressInput");
     addressInput.onfocus = function() {
         addressInput.value = "";
