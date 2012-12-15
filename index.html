@@ -245,6 +245,7 @@ function init(){
     function onWMCSuccess(request) {
 		    var format = new Ol.Format.WMC({'layerOptions': {buffer: 0}});
 			format.read(request.responseText, {map:map});
+            map.zoomToExtent(format.context.bounds);
             if (format.context.title) {                
                 //var domTitle = Ol.Util.getElement("title");
                 title.innerText = format.context.title;
