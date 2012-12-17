@@ -8,7 +8,7 @@ $Date: 2012-11-08 20:32:54 +0000 (jeu. 08 nov. 2012) $
 $Authors: fabrice.phung sebastien.pelhate$
     -->
     <head>
-        <title>Visualiseur simple GeoBretagne</title>
+        <title>Visualiseur simple UMR SAS Rennes</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -84,12 +84,14 @@ function domAddNode(parentNode,tag,text,className) {
 // application hardcoded configuration
 var hardConfig = {
     // viewer title, may be overriden with &title=text
-    title: "Visualiseur simple GeoBretagne",
+    title: "Visualiseur simple UMR SAS Rennes",
 
     // default wms onlineResource for &layers=layernames
-    wms: "http://geobretagne.fr/geoserver/ows",
-    geoserver: "http://geobretagne.fr/geoserver",
+    wms: "http://geowww.agrocampus-ouest.fr/geoserver/ows",
+    geoserver: "http://geowww.agrocampus-ouest.fr/geoserver",
 
+    // default complex viewer
+    complexViewer: "http://geowww.agrocampus-ouest.fr/mapfishapp",
 
     // initial extent and zoom, may be overriden with &x=lon&y=lat&z=zoom
     initialExtent: new Ol.Bounds(145518, 6726671, 372058, 6868691),
@@ -338,6 +340,7 @@ function init(){
     panel.addControls(
         [new Ol.Control.Button({
             displayClass: "btLayerSwitch",
+            title: "Changer le fond de carte",
             trigger: function() {                
                 var ll=(!config.wmc)?hardConfig.layersBackground : wmclayersBackground;
                 var n=ll.length;
@@ -352,6 +355,26 @@ function init(){
             }
         })]
     );
+
+     //************************mapfishapp*********************
+    /**
+     * Loading complex viewer with the same WMC file
+     */
+    if (!config.complexviewer) {
+        map.addLayers(hardConfig.layersBackground);
+        panel.addControls(
+            [new Ol.Control.Button({
+                displayClass: "btComplexViewer",
+                title: "Acceder au visualiseur complet",
+                trigger: function() {                
+                    var newLocation = hardConfig.complexViewer ;
+                    if (config.wmc)
+                        newLocation+="?wmc="+config.wmc ;
+                    window.location.replace(newLocation);
+                }
+            })]
+        );
+    }
 
 
     /**

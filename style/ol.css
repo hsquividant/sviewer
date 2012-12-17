@@ -72,11 +72,19 @@
 }
 .btLayerSwitchItemInactive,
 .btLayerSwitchItemActive {
-    background-image: url("../img/layer.png") !important;
+    background-image: url("../img/reorder.png") !important;
 }
 .btLayerSwitchItemInactive:hover,
 .btLayerSwitchItemActive:hover {
-    background-image: url("../img/layer_a.png") !important;
+    background-image: url("../img/reorder_a.png") !important;
+}
+.btComplexViewerItemInactive,
+.btComplexViewerItemActive {
+    background-image: url("../img/signout.png") !important;
+}
+.btComplexViewerItemInactive:hover,
+.btComplexViewerItemActive:hover {
+    background-image: url("../img/signout_a.png") !important;
 }
 
 /* loading signal */
